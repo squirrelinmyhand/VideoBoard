@@ -18,4 +18,6 @@ Route::get('/', function () {
 });
 Route::get('/write', [BoardController::class, 'write'])->name('write');
 Route::post('/store', [BoardController::class, 'store'])->name('store'); // insert
-Route::get('/detail/{bid}', 'BoardController@detail')->name('detail'); // insert
+Route::get('/list', 'BoardController@list')->name('list'); // listing
+Route::get('/detail/{bid}', 'BoardController@detail')->name('detail'); // go detail
+Route::get('/detail/{bid}/delete', 'BoardController@delete')->name('delete'); // delete

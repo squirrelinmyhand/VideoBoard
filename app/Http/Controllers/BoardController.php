@@ -18,8 +18,12 @@ class BoardController extends Controller // 기본적인 컨트롤러 클래스
     // 게시글 리스팅
     public function list()
     {
+        $posts = Board::where('del_time', null)
+                        ->orderBy('reg_time', 'desc')
+                        ->get();
+        $post_cnt = $posts->count();
         // 리스팅 뷰 페이지 리턴
-        return view('list');
+        return view('list', compact('posts', 'post_cnt'));
     }
 
     public function detail($bid) {
@@ -50,10 +54,11 @@ class BoardController extends Controller // 기본적인 컨트롤러 클래스
             DB::beginTransaction();            
             $board->title = $request->title;
             $board->content = $request->content;
+            $board->save();
             DB::commit();
-
+            
             // 게시글 저장 후 리스트 페이지로 리다이렉션
-            return redirect(route('detail', ['id' => $board->tid]))->withSuccess('등록되었습니다');
+            return redirect(route('detail', ['bid' => $board->id]))->withSuccess('등록되었습니다');
         } catch (\PDOException $e) {
             Board::rollBack();
         }
@@ -63,14 +68,30 @@ class BoardController extends Controller // 기본적인 컨트롤러 클래스
             ->withErrors('등록에 실패했습니다.');
     }
 
+    public function delete($bid) {
+        try {
+            DB::beginTransaction();
+            Board::where('bid', $bid)->update(["del_time" => DB::raw('NOW()')]);
+            DB::commit();
+
+            return redirect(route('list'))->withSuccess('삭제되었습니다');
+        } catch (\PDOException $e) {
+            echo $e;
+            exit;
+            //DB::rollBack();
+        }
+
+        return redirect(route('detail', ['bid' => $bid]))->withErrors('삭제 실패되었습니다');
+    }
+
     protected function sendFailedLoginResponse(Request $request)
-{
+    {
     return redirect()->to('/the_redirect_location')
         ->withInput($request->only($this->username(), 'remember'))
         ->withErrors([
             $this->username() => Lang::get('auth.failed'),
         ]);
-}
+    }
 }
 
 ?>

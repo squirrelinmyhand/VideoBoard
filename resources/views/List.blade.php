@@ -7,6 +7,11 @@
     <title>리스팅</title>
 </head>
 <body>
-    
+    @foreach($posts as $post)
+        <a href="/detail/{{ $post->bid }}">
+            <li class="border-4 border-gray-500 px-2 py-2 mt-4">タイトル : {{ $post->title }} <small class="float-right">created_at {{ $post->reg_time}}</small><br>
+            内容 : {{ $post ->content }} </li>
+        </a>             
+    @endforeach
 </body>
 </html>

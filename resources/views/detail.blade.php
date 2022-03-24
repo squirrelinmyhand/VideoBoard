@@ -6,17 +6,18 @@
 <body>
     <h1>글 상세페이지</h1>
     <div>
- 
+        <span>제목</span>
         {{ $detail->title }}
     </div>
     <div>
- 
+        <span>본문</span>
         {{ $detail->content }}
     </div>
  
     <div>
         
         <a href="/posts/{{ $detail }}/edit">수정하기</a>
+        <a href="{{ route('delete', ['bid' => $detail->bid]) }}">삭제하기</a>
     </div>
  
 </body>
