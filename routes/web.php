@@ -16,8 +16,14 @@ use App\Http\Controllers\BoardController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/list', 'BoardController@list')->name('list'); // listing
+
 Route::get('/write', [BoardController::class, 'write'])->name('write');
 Route::post('/store', [BoardController::class, 'store'])->name('store'); // insert
-Route::get('/list', 'BoardController@list')->name('list'); // listing
+
 Route::get('/detail/{bid}', 'BoardController@detail')->name('detail'); // go detail
-Route::get('/detail/{bid}/delete', 'BoardController@delete')->name('delete'); // delete
+
+Route::get('/detail/{bid}/rewrite', 'BoardController@rewrite')->name('rewrite'); // go rewrite view
+Route::post('/detail/update', 'BoardController@update')->name('update'); // do rewrite
+
+Route::get('/delete/{bid}', 'BoardController@delete')->name('delete'); // delete

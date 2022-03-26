@@ -68,6 +68,51 @@ class BoardController extends Controller // 기본적인 컨트롤러 클래스
             ->withErrors('등록에 실패했습니다.');
     }
 
+    // 게시글 수정 페이지
+    public function rewrite($bid)
+    {
+        $post = Board::where('bid', $bid)
+                        ->where('del_time', null)
+                        ->first();
+
+        if($post != null) {
+            // 게시글 생성 페이지에 데이터를 전달
+            return view('write', compact('post'));
+        } else {
+            return redirect(route('detail', ['bid' => $bid]));
+        }
+    }
+
+
+    // 게시글 수정 페이지
+    public function update(Request $request)
+    {
+        $request->validate([
+            'bid' => 'required',
+            'title' => 'required',
+            'content' => 'required',
+        ]);
+        // echo $request->title;
+        // echo $request->content;
+        // echo $request->bid;exit;
+
+        $UpdateTarget = [
+            'title' => $request->title,
+            'content' => $request->content,
+            'edit_time' => DB::raw('NOW()'),
+        ];
+        
+        try {
+            DB::beginTransaction();
+            Board::where('bid', $request->bid)->update($UpdateTarget);
+            DB::commit();            
+        } catch (\PDOException $e) {
+            DB::rollBack();
+        } finally {
+            return redirect(route('detail', ['bid' => $request->bid]))->withSuccess('수정되었습니다')->withErrors('수정 실패되었습니다');
+        }
+    }
+
     public function delete($bid) {
         try {
             DB::beginTransaction();

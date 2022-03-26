@@ -16,7 +16,7 @@
  
     <div>
         
-        <a href="/posts/{{ $detail }}/edit">수정하기</a>
+        <a href="{{ route('rewrite', ['bid' => $detail->bid]) }}">수정하기</a>
         <a href="{{ route('delete', ['bid' => $detail->bid]) }}">삭제하기</a>
     </div>
  

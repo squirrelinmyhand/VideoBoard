@@ -7,14 +7,33 @@
     <title>게시글 작성</title>
 </head>
 <body>
-    <form action="{{ route('store') }}" method="POST">
+    @php
+        $route = "store";
+        $title = null;
+        $content = null;
+        $bid = 0;
+        $btnValue = "등록";
+    @endphp
+    
+    @if(isset($post))
+        @php
+            $route = "update";
+            $title = $post->title;
+            $content = $post->content;
+            $bid = $post->bid;
+            $btnValue = "수정";
+        @endphp
+    @endif
+
+    <form action="{{ route($route) }}" method="POST">
         @csrf
         <label for="title">제목</label>
-        <input type="text" name="title" id="title" placeholder="제목을 입력해주세요">
+        <input type="text" name="title" id="title" placeholder="제목을 입력해주세요" value='{{ $title }}'>
         <br>
         <label for="content">본문</label>
-        <textarea name="content" id="content" cols="30" rows="10" placeholder="본문을 입력해주세요"></textarea>
-        <input type="submit" value="등록">
+        <textarea name="content" id="content" cols="30" rows="10" placeholder="본문을 입력해주세요">{{ $content }}</textarea>
+        <input type="hidden" name="bid" value='{{ $bid }}'>
+        <input type="submit" value="{{ $btnValue }}">
     </form>
     
 </body>
