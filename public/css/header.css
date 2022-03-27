@@ -1,0 +1,18 @@
+header {
+    background-color: #00ffff;
+    /* height: 30px; */
+}
+
+.header-bar {
+    padding: 0em 2em;   
+}
+
+.header-home > a {
+    text-decoration: none;
+}
+
+/* 네비게이션 컨텐츠 폰트 설정 */
+.navlink {
+    text-decoration: none;
+    font-weight: bold;
+}

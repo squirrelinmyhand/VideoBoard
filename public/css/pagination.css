@@ -1,0 +1,14 @@
+/* all */
+.pagination {
+    list-style: none;
+    /* display: inline; */
+}
+
+.pagination > li {
+    display: inline-block;
+    margin: 0em 1.5em;
+}
+
+.pagination > li > a {
+    text-decoration: none;
+}

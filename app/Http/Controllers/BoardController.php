@@ -20,8 +20,10 @@ class BoardController extends Controller // 기본적인 컨트롤러 클래스
     {
         $posts = Board::where('del_time', null)
                         ->orderBy('reg_time', 'desc')
-                        ->get();
+                        ->Paginate(1, ['*'], 'page');
         $post_cnt = $posts->count();
+
+        $total = $posts->total();
         // 리스팅 뷰 페이지 리턴
         return view('list', compact('posts', 'post_cnt'));
     }
@@ -92,9 +94,6 @@ class BoardController extends Controller // 기본적인 컨트롤러 클래스
             'title' => 'required',
             'content' => 'required',
         ]);
-        // echo $request->title;
-        // echo $request->content;
-        // echo $request->bid;exit;
 
         $UpdateTarget = [
             'title' => $request->title,
