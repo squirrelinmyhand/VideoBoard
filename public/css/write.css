@@ -1,0 +1,12 @@
+.writeInput > input{
+    width: 80%;
+}
+
+.one-line-label {
+    
+}
+
+.one-line-label, .writeInput {
+    display: inline;
+}
+

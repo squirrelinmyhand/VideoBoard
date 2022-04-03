@@ -6,6 +6,7 @@ use Illuminate\Http\Request; // Request 사용
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\Board; // Board 모델 사용
+use App\Models\Attachments; // attachments 모델 사용
 
 class BoardController extends Controller // 기본적인 컨트롤러 클래스
 {
@@ -20,7 +21,7 @@ class BoardController extends Controller // 기본적인 컨트롤러 클래스
     {
         $posts = Board::where('del_time', null)
                         ->orderBy('reg_time', 'desc')
-                        ->Paginate(1, ['*'], 'page');
+                        ->Paginate(10, ['*'], 'page');
         $post_cnt = $posts->count();
 
         $total = $posts->total();
@@ -46,21 +47,39 @@ class BoardController extends Controller // 기본적인 컨트롤러 클래스
     // 게시글 저장
     public function store(Request $request)
     {
+        // dd($request);exit;
         $request->validate([
             'title' => 'required',
             'content' => 'required',
+            'attach' => 'mimes:csv,txt,xlx,xls,pdf,jpg',
         ]);
+
+        
 
         try {
             $board = new Board();
-            DB::beginTransaction();            
+            DB::beginTransaction();
             $board->title = $request->title;
             $board->content = $request->content;
             $board->save();
+
+            if(isset($request->attach)) {
+                $attachment = new Attachments();
+                $board->title = $request->title;
+                $board->id;
+            }
+
             DB::commit();
             
             // 게시글 저장 후 리스트 페이지로 리다이렉션
-            return redirect(route('detail', ['bid' => $board->id]))->withSuccess('등록되었습니다');
+            if($board){
+                return response()->json([
+                    "action" => "insert",
+                    "bid" => $board->id,]
+                , 200);
+                // return response()->json(array('msg'=> $board), 200);
+            }
+            // return redirect(route('detail', ['bid' => $board->id]))->withSuccess('등록되었습니다');
         } catch (\PDOException $e) {
             Board::rollBack();
         }

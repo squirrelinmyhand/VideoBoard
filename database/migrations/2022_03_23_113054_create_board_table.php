@@ -20,7 +20,6 @@ class CreateBoardTable extends Migration
             $table->timestamp('reg_time')->useCurrent()->comment('게시글 생성 시간');
             $table->timestamp('edit_time')->default(null)->useCurrentOnUpdate()->nullable()->comment('게시글 수정 시간');
             $table->timestamp('del_time')->default(null)->nullable()->comment('게시글 삭제 시간');
-
         });
     }
 

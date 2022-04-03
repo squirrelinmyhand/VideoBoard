@@ -4,15 +4,18 @@
         @include('include.head')
     </head>
     <body>
-        <header>
-            @include('include.header')
-        </header>    
+        @include('include.header')
         <div class="container">
             <header class="row">
                 
             </header>
-            <div id="main" class="row">
-                @yield('content')
+            <div id="mainBox">
+                <div id="accountBox" class="row">
+                    @yield('')
+                </div>
+                <div id="contentBox" class="row">
+                    @yield('content')
+                </div>
             </div>
             <footer class="row">
                 {{-- @include('include.footer') --}}

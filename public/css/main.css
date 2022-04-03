@@ -3,19 +3,55 @@ body {
     padding-left: 3em;
     margin-right: auto;
     margin-left: auto;
+    display: grid;
+    font-family: sans-serif;
 }
+
+#mainBox {
+    padding: 0em 2rem;
+    box-shadow: 0em 1em 1em 0em #EEEEEE;
+}
+
 @media (min-width: 768px) {
-    .container {
+    #mainBox {
       width: 750px;
     }
 }
 @media (min-width: 992px) {
-    .container {
+    #mainBox {
         width: 970px;
     }
 }
 @media (min-width: 1200px) {
-    .container {
-        width: 1170px;
+    #mainBox {
+        width: auto;
     }
+}
+
+#contentBox > div {
+    display: block;
+}
+
+.oneBoard {
+    width: 42em;
+    /* margin: 0 auto; */
+}
+
+.table {
+    /* margin: 0; */
+    width: 100%;
+    text-align: center;
+}
+
+.contentFooter {
+    text-align: center;
+    padding: 0;
+}
+
+.pagination {
+    padding-left: 0!important;
+}
+
+.QuillEditor {
+    height: 20rem!important;
 }
