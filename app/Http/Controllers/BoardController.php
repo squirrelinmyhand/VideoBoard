@@ -6,7 +6,7 @@ use Illuminate\Http\Request; // Request 사용
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\Board; // Board 모델 사용
-use App\Models\Attachments; // attachments 모델 사용
+use App\Models\Attachment; // attachments 모델 사용
 
 class BoardController extends Controller // 기본적인 컨트롤러 클래스
 {
@@ -51,36 +51,65 @@ class BoardController extends Controller // 기본적인 컨트롤러 클래스
         $request->validate([
             'title' => 'required',
             'content' => 'required',
-            'attach' => 'mimes:csv,txt,xlx,xls,pdf,jpg',
+            'attach' => 'mimes:csv,txt,xlx,xls,pdf,jpg,png',
         ]);
 
-        
+        //dd($request);exit;
 
         try {
-            $board = new Board();
+            $BoardModel = new Board();
             DB::beginTransaction();
-            $board->title = $request->title;
-            $board->content = $request->content;
-            $board->save();
+            $BoardModel->title = $request->title;
+            $BoardModel->content = $request->content;
+            $BoardModel->save();
 
             if(isset($request->attach)) {
-                $attachment = new Attachments();
-                $board->title = $request->title;
-                $board->id;
-            }
+                $file = $request->attach;
+                $OrgName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $fileExt = $file->extension();
+                $fileSize = $file->getSize();
+                $md5Name = md5($file->getClientOriginalName() . $BoardModel->id . $fileSize);
 
+                $isMove = false;
+                $try = 0;
+                while(true) {
+                    try {
+                        $request->attach->move(public_path('storage/folderA/'), $md5Name);
+                        $isMove = true;
+                        break;
+                    } catch (Exception $e) {
+                        if($try < 3) {
+                            $try++;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+                
+                if($isMove) {
+                    $AttachModel = new Attachment();
+                    $AttachModel->bid = $BoardModel->id;
+                    $AttachModel->md5Name = $md5Name;
+                    $AttachModel->fileName = $OrgName;
+                    $AttachModel->fileExt = $fileExt;
+                    $AttachModel->fileSize = $fileSize;
+                    $AttachModel->save();
+                }
+            }
+            
             DB::commit();
             
             // 게시글 저장 후 리스트 페이지로 리다이렉션
-            if($board){
+            if($BoardModel){
                 return response()->json([
                     "action" => "insert",
-                    "bid" => $board->id,]
-                , 200);
+                    "bid" => $BoardModel->id,
+                ], 200);
                 // return response()->json(array('msg'=> $board), 200);
             }
             // return redirect(route('detail', ['bid' => $board->id]))->withSuccess('등록되었습니다');
         } catch (\PDOException $e) {
+            echo $e;
             Board::rollBack();
         }
 

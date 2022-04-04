@@ -6,12 +6,18 @@ $( document ).ready(function() {
 
         if(!ChkEmpty(title, "제목")) {
             if(!ChkEmpty(content, "본문")) {
+                const form = $('#BoardForm')[0];
+                let formData = new FormData(form);
+                formData.append('content', content);
+
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
                     type: 'post',
                     url : $('#BoardForm').attr('action'),
+                    processData: false,
+                    contentType: false,
                     dataType:'json',
-                    data: {'title':title, 'content':content},
+                    data: formData,
                     success: function(data) {
                         // console.log(data);
                         $.each( data, function( key, val ) {
