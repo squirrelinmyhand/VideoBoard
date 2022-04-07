@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request; // Request 사용
+use Illuminate\Auth\Access\Response;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\Board; // Board 모델 사용
@@ -30,11 +31,38 @@ class BoardController extends Controller // 기본적인 컨트롤러 클래스
     }
 
     public function detail($bid) {
-        $detail = Board::where('bid', $bid)
+        $board = Board::select('bid', 'title', 'content', 'reg_time as date' /*DB::raw('DATE_FORMAT(reg_time, \'%Y-%m-%d\') as date')*/)
+                        ->where('bid', $bid)
                         ->where('del_time', null)
                         ->first();
-        // 상세 게시글 페이지 리턴
+        
+        $files = Attachment::where('bid', $bid)
+                            ->get();
+
+        $detail = json_decode($board);
+        $detail->files = json_decode($files);
+
         return view('detail', compact('detail'));
+    }
+
+    // file download
+    public function download($bid, $aid) {
+
+        $file = Attachment::where('aid', $aid)
+                            ->where('bid', $bid)
+                            ->first();
+
+        if($file != null) {
+            $downFile = public_path('storage/folderA/' . $file->md5Name);
+
+            // 원본 파일명 구하기
+            $OrgFileName = $file->fileName;
+            if($file->fileExt != null) {
+                $OrgFileName .= "." . $file->fileExt;
+            }
+
+            return \Response::download($downFile, $OrgFileName);
+        }
     }
 
     // 게시글 작성 페이지

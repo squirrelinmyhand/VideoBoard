@@ -1,0 +1,8 @@
+.titleBox {
+    background-color: #e2e2e2;
+    padding: 0.5em 5em;
+}
+
+.boardTitle, .boardDate {
+    display: inline-block;
+}

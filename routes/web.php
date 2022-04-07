@@ -27,3 +27,5 @@ Route::get('/detail/{bid}/rewrite', 'BoardController@rewrite')->name('rewrite');
 Route::post('/detail/update', 'BoardController@update')->name('update'); // do rewrite
 
 Route::get('/delete/{bid}', 'BoardController@delete')->name('delete'); // delete
+
+Route::get('/detail/{bid}/download/{aid}', 'BoardController@download')->name('download');
